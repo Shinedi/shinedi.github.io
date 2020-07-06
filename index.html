@@ -86,8 +86,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="为什么使用构建工具"><a href="#为什么使用构建工具" class="headerlink" title="为什么使用构建工具"></a>为什么使用构建工具</h4><p>1、转换ES6的语法<br>2、转换JSX<br>3、css前缀补全/预处理器<br>4、压缩混淆<br>5、图片压缩</p>
-<h4 id="webpack核心概念"><a href="#webpack核心概念" class="headerlink" title="webpack核心概念"></a>webpack核心概念</h4><p>#####1、entry<br>Entry用来指定webpack打包入口</p>
+        <h3 id="为什么使用构建工具"><a href="#为什么使用构建工具" class="headerlink" title="为什么使用构建工具"></a>为什么使用构建工具</h3><p>1、转换ES6的语法<br>2、转换JSX<br>3、css前缀补全/预处理器<br>4、压缩混淆<br>5、图片压缩</p>
+<h3 id="webpack核心概念"><a href="#webpack核心概念" class="headerlink" title="webpack核心概念"></a>webpack核心概念</h3><p>####1、entry<br>Entry用来指定webpack打包入口</p>
 <ul>
 <li><p>用法</p>
 <blockquote>
@@ -105,7 +105,7 @@
 </ul>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#123;</span><br><span class="line">       app: &#39;.&#x2F;src&#x2F;app.js&#39;,</span><br><span class="line">       adminApp: &#39;.&#x2F;src&#x2F;adminApp.js&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>#####2、output</p>
+<p>####2、output</p>
 <p>output用来告诉webpack如何将编译后的文件输出到磁盘</p>
 <ul>
 <li>用法<blockquote>
@@ -123,25 +123,25 @@
 </li>
 </ul>
 <hr>
-<p>#####3、Loaders<br>webpack开箱只支持JS和JSON两种文件类型,通过loaders去支持其他文件类型并转成有效模块,添加到依赖图中</p>
+<p>####3、Loaders<br>webpack开箱只支持JS和JSON两种文件类型,通过loaders去支持其他文件类型并转成有效模块,添加到依赖图中</p>
 <p>本身是一个函数,接受源文件作为参数,返回转换的结果</p>
 <ul>
 <li>loader调用是从右往左链式调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;path&#x2F;xsss&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;bundle.js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            test: &#x2F;.js$&#x2F;,</span><br><span class="line">            use: &#39;babel-loader&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <hr>
-<p>#####4、plugins<br>作用于整个构建过程，loaders没办法做的事情都可以通过plugins完成，例如文件优化</p>
+<p>####4、plugins<br>作用于整个构建过程，loaders没办法做的事情都可以通过plugins完成，例如文件优化</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;path&#x2F;xsss&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;bundle.js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        new HtmlWebpackPlugin(&#123;</span><br><span class="line">            template:&#39;.&#x2F;src&#x2F;index.html&#39;</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
-<p>#####5、mode<br>mode用来指定当前的构建环境是：production、development、none<br>默认值是production<br>根据不同环境开启相应优化选项<br>process.env.NODE_ENV</p>
+<p>####5、mode<br>mode用来指定当前的构建环境是：production、development、none<br>默认值是production<br>根据不同环境开启相应优化选项<br>process.env.NODE_ENV</p>
 <hr>
-<p>#####6、解析ES6<br>使用babel-loader,babel-loader是依赖babel的，babel的配置文件是.babeIrc</p>
+<p>####6、解析ES6<br>使用babel-loader,babel-loader是依赖babel的，babel的配置文件是.babeIrc</p>
 <ul>
 <li>babelrc配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;presets&quot;: [</span><br><span class="line">        &quot;@babel&#x2F;preset-env&quot;,</span><br><span class="line">        &quot;@babel&#x2F;preset-react&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li>安装：npm i @babel/core @babel/preset-env babel-loader -D<br>（@babel/core是babel的核心模块，-D是–save-dev简称）</li>
 </ul>
 <hr>
-<p>#####7、解析css、less、sass</p>
+<p>####7、解析css、less、sass</p>
 <ul>
 <li>css-loader用于加载.css文件，并且转换成commonJS对象</li>
 <li>style-loader将样式通过style标签插入到head中</li>
@@ -150,7 +150,7 @@
 </li>
 </ul>
 <hr>
-<p>#####8、解析图片和字体</p>
+<p>####8、解析图片和字体</p>
 <ul>
 <li>file-loader用于处理文件（包括图片和字体）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#39;use strict&#39;</span><br><span class="line"></span><br><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;;</span><br><span class="line">import logo from &#39;.&#x2F;images&#x2F;logo.png&#39;</span><br><span class="line">import &#39;.&#x2F;search.less&#39;;</span><br><span class="line"></span><br><span class="line">class Search extends React.Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return &lt;div className&#x3D;&quot;search-text&quot;&gt;</span><br><span class="line">            搜索文字 &lt;img src&#x3D;&#123; logo &#125; &#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ReactDOM.render(</span><br><span class="line">    &lt;Search &#x2F;&gt;,</span><br><span class="line">    document.getElementById(&#39;root&#39;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
 <li>webpack.config.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.(png|jpg|gif|jpeg)$&#x2F;,</span><br><span class="line">    use: &#39;file-loader&#39;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.(woff|woff2|eot|ttf|otf)$&#x2F;,</span><br><span class="line">    use: [</span><br><span class="line">        &#39;file-loader&#39;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
@@ -158,7 +158,7 @@
 </li>
 </ul>
 <hr>
-<p>#####9、webpack中的文件监听<br>文件监听是在发现源码发生变化时,自动重新构建出新的输出文件</p>
+<p>####9、webpack中的文件监听<br>文件监听是在发现源码发生变化时,自动重新构建出新的输出文件</p>
 <p>webpack开启监听模式，有两种方式：</p>
 <ul>
 <li><p>启动webpack命令时，带上–watch参数</p>
