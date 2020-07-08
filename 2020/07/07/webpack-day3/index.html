@@ -5,13 +5,17 @@
   
 
   
-  <title>Hexo</title>
+  <title>webpack-day3 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="1、文件指纹 什么是文件指纹？打包后输出的文件名的后缀 文件指纹如何生成 Hash*:和整个项目的构建有关，只要项目文件有修改，整个项目构建的hash值就会修改 Chunnkhash*: 和webpack打包的chunk有关，不同的entry会生成不同的chunkHash值 ContentHash*: 根据文件内容定义hash,文件内容不变，则contenthash不变   JS的文件指纹设置设置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack-day3">
+<meta property="og:url" content="http://yoursite.com/2020/07/07/webpack-day3/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、文件指纹 什么是文件指纹？打包后输出的文件名的后缀 文件指纹如何生成 Hash*:和整个项目的构建有关，只要项目文件有修改，整个项目构建的hash值就会修改 Chunnkhash*: 和webpack打包的chunk有关，不同的entry会生成不同的chunkHash值 ContentHash*: 根据文件内容定义hash,文件内容不变，则contenthash不变   JS的文件指纹设置设置">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-07T02:58:37.000Z">
+<meta property="article:modified_time" content="2020-07-08T12:53:49.309Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -62,9 +66,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-webpack-day3" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-webpack-day3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/07/webpack-day3/" class="article-date">
   <time datetime="2020-07-07T02:58:37.000Z" itemprop="datePublished">2020-07-07</time>
@@ -77,8 +79,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/07/webpack-day3/">webpack-day3</a>
+    <h1 class="article-title" itemprop="name">
+      webpack-day3
     </h1>
   
 
@@ -220,267 +222,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-webpack-day2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/05/webpack-day2/" class="article-date">
-  <time datetime="2020-07-05T15:19:38.000Z" itemprop="datePublished">2020-07-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/05/webpack-day2/">webpack-day2</a>
-    </h1>
+    <a href="/2020/07/05/webpack-day2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack-day2</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="为什么使用构建工具"><a href="#为什么使用构建工具" class="headerlink" title="为什么使用构建工具"></a>为什么使用构建工具</h3><p>1、转换ES6的语法<br>2、转换JSX<br>3、css前缀补全/预处理器<br>4、压缩混淆<br>5、图片压缩</p>
-<h3 id="webpack核心概念"><a href="#webpack核心概念" class="headerlink" title="webpack核心概念"></a>webpack核心概念</h3><p>####1、entry<br>Entry用来指定webpack打包入口</p>
-<ul>
-<li><p>用法</p>
-<blockquote>
-<ul>
-<li>单入口：entry是一个字符串</li>
-</ul>
-</blockquote>
-<p>  module.exports = {</p>
-<pre><code>entry: &apos;./path/xsss&apos;</code></pre><p>  }</p>
-</li>
-</ul>
-<blockquote>
-<ul>
-<li>多入口：entry是一个对象</li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#123;</span><br><span class="line">       app: &#39;.&#x2F;src&#x2F;app.js&#39;,</span><br><span class="line">       adminApp: &#39;.&#x2F;src&#x2F;adminApp.js&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>####2、output</p>
-<p>output用来告诉webpack如何将编译后的文件输出到磁盘</p>
-<ul>
-<li>用法<blockquote>
-<ul>
-<li>单入口</li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;path&#x2F;xsss&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;bundle.js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li>多入口(通过占位符确保文件名称统一)</li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#123;</span><br><span class="line">       app: &#39;.&#x2F;src&#x2F;app.js&#39;,</span><br><span class="line">       adminApp: &#39;.&#x2F;src&#x2F;adminApp.js&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;[name].js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<p>####3、Loaders<br>webpack开箱只支持JS和JSON两种文件类型,通过loaders去支持其他文件类型并转成有效模块,添加到依赖图中</p>
-<p>本身是一个函数,接受源文件作为参数,返回转换的结果</p>
-<ul>
-<li>loader调用是从右往左链式调用<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;path&#x2F;xsss&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;bundle.js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    module: &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            test: &#x2F;.js$&#x2F;,</span><br><span class="line">            use: &#39;babel-loader&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<p>####4、plugins<br>作用于整个构建过程，loaders没办法做的事情都可以通过plugins完成，例如文件优化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    entry: &#39;.&#x2F;path&#x2F;xsss&#39;,</span><br><span class="line">    output: &#123;</span><br><span class="line">        filename:&#39;bundle.js&#39;,</span><br><span class="line">        path: __dirname+&#39;dist&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        new HtmlWebpackPlugin(&#123;</span><br><span class="line">            template:&#39;.&#x2F;src&#x2F;index.html&#39;</span><br><span class="line">        &#125;)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<p>####5、mode<br>mode用来指定当前的构建环境是：production、development、none<br>默认值是production<br>根据不同环境开启相应优化选项<br>process.env.NODE_ENV</p>
-<hr>
-<p>####6、解析ES6<br>使用babel-loader,babel-loader是依赖babel的，babel的配置文件是.babeIrc</p>
-<ul>
-<li>babelrc配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;presets&quot;: [</span><br><span class="line">        &quot;@babel&#x2F;preset-env&quot;,</span><br><span class="line">        &quot;@babel&#x2F;preset-react&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>安装：npm i @babel/core @babel/preset-env babel-loader -D<br>（@babel/core是babel的核心模块，-D是–save-dev简称）</li>
-</ul>
-<hr>
-<p>####7、解析css、less、sass</p>
-<ul>
-<li>css-loader用于加载.css文件，并且转换成commonJS对象</li>
-<li>style-loader将样式通过style标签插入到head中</li>
-<li>安装： npm i style-loader css-loader less less-loader<br>less-loader是依赖less的<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#39;use strict&#39;</span><br><span class="line"></span><br><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;;</span><br><span class="line">import logo from &#39;.&#x2F;images&#x2F;logo.png&#39;</span><br><span class="line">import &#39;.&#x2F;search.less&#39;;</span><br><span class="line"></span><br><span class="line">class Search extends React.Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return &lt;div className&#x3D;&quot;search-text&quot;&gt;</span><br><span class="line">            搜索文字 &lt;img src&#x3D;&#123; logo &#125; &#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ReactDOM.render(</span><br><span class="line">    &lt;Search &#x2F;&gt;,</span><br><span class="line">    document.getElementById(&#39;root&#39;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
-<li>webpack.config.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.less$&#x2F;,</span><br><span class="line">    use: [</span><br><span class="line">        &#39;style-loader&#39;,</span><br><span class="line">        &#39;css-loader&#39;,</span><br><span class="line">        &#39;less-loader&#39;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<p>####8、解析图片和字体</p>
-<ul>
-<li>file-loader用于处理文件（包括图片和字体）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#39;use strict&#39;</span><br><span class="line"></span><br><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import ReactDOM from &#39;react-dom&#39;;</span><br><span class="line">import logo from &#39;.&#x2F;images&#x2F;logo.png&#39;</span><br><span class="line">import &#39;.&#x2F;search.less&#39;;</span><br><span class="line"></span><br><span class="line">class Search extends React.Component &#123;</span><br><span class="line">    render() &#123;</span><br><span class="line">        return &lt;div className&#x3D;&quot;search-text&quot;&gt;</span><br><span class="line">            搜索文字 &lt;img src&#x3D;&#123; logo &#125; &#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">ReactDOM.render(</span><br><span class="line">    &lt;Search &#x2F;&gt;,</span><br><span class="line">    document.getElementById(&#39;root&#39;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
-<li>webpack.config.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.(png|jpg|gif|jpeg)$&#x2F;,</span><br><span class="line">    use: &#39;file-loader&#39;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.(woff|woff2|eot|ttf|otf)$&#x2F;,</span><br><span class="line">    use: [</span><br><span class="line">        &#39;file-loader&#39;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>url-loader也可以处理图片和字体,可以设置较小资源自动base64<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: &#x2F;.(png|jpg|gif|jpeg)$&#x2F;,</span><br><span class="line">    use: [</span><br><span class="line">        &#123;</span><br><span class="line">            loader: &#39;url-loader&#39;,</span><br><span class="line">            options: &#123;</span><br><span class="line">                limit: 20480</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<p>####9、webpack中的文件监听<br>文件监听是在发现源码发生变化时,自动重新构建出新的输出文件</p>
-<p>webpack开启监听模式，有两种方式：</p>
-<ul>
-<li><p>启动webpack命令时，带上–watch参数</p>
-</li>
-<li><p>在配置webpack.config.js中设置watch: true</p>
-</li>
-<li><p>也可在package.json中添加命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;webpack&quot;,</span><br><span class="line">    &quot;watch&quot;: &quot;webpack --watch&quot;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<p><em>唯一缺陷：每次需要手动刷新浏览器</em></p>
-</li>
-<li><p>文件监听的原理分析<br>轮询判断文件的最后编辑时间是否变化<br>某个文件发生了变化，并不会立刻告诉监听者，而是先缓存起来，等aggregateTimeout</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module.exports&#x3D; &#123;</span><br><span class="line">    &#x2F;&#x2F;默认false，不开启</span><br><span class="line">    watch: true,</span><br><span class="line">    &#x2F;&#x2F;只有开启监听模式时，watchOptions才有意义</span><br><span class="line">    watchOptions: &#123;</span><br><span class="line">        &#x2F;&#x2F; 默认不为空，不支持的文件或文件夹，支持正则</span><br><span class="line">        ignored: &#x2F;node_modules&#x2F;,</span><br><span class="line">        &#x2F;&#x2F; 监听到变化后会等300ms再去执行，默认300ms</span><br><span class="line">        aggregateTimeout: 300,</span><br><span class="line">        &#x2F;&#x2F; 判断文件是否发生变化是通过不停询问系统指定文件有没有变化实现的,默认每秒问1次</span><br><span class="line">        poll:1000</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<hr>
-<p>####10、热更新及原理分析</p>
-<ul>
-<li>热更新：webpack-dev-server<br>wds不刷新浏览器<br>wds不输出文件，而是放在内存中<br>使用HotModuleReplacementPlugin插件</li>
-<li>package.json(需要安装webpack-dev-server)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">    &quot;build&quot;: &quot;webpack&quot;,</span><br><span class="line">    &quot;watch&quot;: &quot;webpack --watch&quot;,</span><br><span class="line">    &quot;dev&quot;: &quot;webpack-dev-server --open&quot;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-<ul>
-<li>webpack.config.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mode: &#39;development&#39;,</span><br><span class="line">plugins: [</span><br><span class="line">    new webpack.HotModuleReplacementPlugin()</span><br><span class="line">],</span><br><span class="line">devServer: &#123;</span><br><span class="line">    contentBase: &#39;.&#x2F;dist&#39;,</span><br><span class="line">    hot: true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/05/webpack-day2/" data-id="ckcaiitj30000hbxubhx4dcol" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-webpack笔记1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/04/webpack%E7%AC%94%E8%AE%B01/" class="article-date">
-  <time datetime="2020-07-04T15:33:29.861Z" itemprop="datePublished">2020-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/04/webpack%E7%AC%94%E8%AE%B01/">webpack笔记1</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>###loaders<br>    npm i @babel/core @babel/preset-env babel/loader -D</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/04/webpack%E7%AC%94%E8%AE%B01/" data-id="ckc7t3zpu0000hkxudydn5o3d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hahaha" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/04/hahaha/" class="article-date">
-  <time datetime="2020-07-04T15:27:27.000Z" itemprop="datePublished">2020-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/04/hahaha/">hahaha</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/04/hahaha/" data-id="ckc7svzdu0000unxu0klw9git" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/04/hello-world/" class="article-date">
-  <time datetime="2020-07-04T15:09:19.288Z" itemprop="datePublished">2020-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/04/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/04/hello-world/" data-id="ckc7svze10001unxuff3s4kwh" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
