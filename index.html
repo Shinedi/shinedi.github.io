@@ -64,6 +64,146 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpack-day5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/20/webpack-day5/" class="article-date">
+  <time datetime="2020-07-20T09:31:14.000Z" itemprop="datePublished">2020-07-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/20/webpack-day5/">webpack-day5</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1、优化构建时命令行的现实日志"><a href="#1、优化构建时命令行的现实日志" class="headerlink" title="1、优化构建时命令行的现实日志"></a>1、优化构建时命令行的现实日志</h3><ol>
+<li>统计信息stats</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Alternative</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>errors-only</td>
+<td>none</td>
+<td>只在发生错误时输出</td>
+</tr>
+<tr>
+<td>minimal</td>
+<td>none</td>
+<td>只在发生错误或有新的编译时输出</td>
+</tr>
+<tr>
+<td>none</td>
+<td>false</td>
+<td>没有输出</td>
+</tr>
+<tr>
+<td>normal</td>
+<td>true</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>none</td>
+<td>全部输出</td>
+</tr>
+</tbody></table>
+<p>在webpack.conf.json中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    ...</span><br><span class="line">    stats: &#39;errors-only&#39;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>有devserver的时候，在devserver中加stats: ‘errors-only’<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    ...</span><br><span class="line">   devServer: &#123;</span><br><span class="line">        contentBase: &#39;.&#x2F;dist&#39;,</span><br><span class="line">        stats: &#39;errors-only&#39;,</span><br><span class="line">        hot: true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li>如何优化命令行的构建日志<br>使用friendly-errors-webpack-plugin</li>
+</ol>
+<ul>
+<li>success: 构建成功的日志提示</li>
+<li>warning: 构建警告的日志提示</li>
+<li>error: 构建报错的日志提示</li>
+</ul>
+<p>stats设置成errors-only</p>
+<ol start="3">
+<li>使用<br>安装：npm i friendly-errors-webpack-plugin -D<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const FriendlyErrorsWebpackPlugin &#x3D; require(&#39;friendly-errors-webpack-plugin&#39;);</span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    ... </span><br><span class="line">    plugins: [</span><br><span class="line">        new FriendlyErrorsWebpackPlugin(),</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="2、构建异常和中断处理"><a href="#2、构建异常和中断处理" class="headerlink" title="2、构建异常和中断处理"></a>2、构建异常和中断处理</h3><ol>
+<li>如何判断构建是否成功？<br>在CI/CD的pipeline或者让发布系统需要知道当前的构建状态</li>
+</ol>
+<p><strong>每次构建完成后输入echo $?获取错误码</strong></p>
+<ol start="2">
+<li>构建异常和中断处理<br>webpack之前的版本构建失败不会抛出错误码<br>Node.js中的process.exit规范</li>
+</ol>
+<ul>
+<li>0 表示成功完成,回调函数中，err为null</li>
+<li>非0 表示执行失败,回调函数中，err为null,err.code就是传给exit的数字</li>
+</ul>
+<ol start="3">
+<li>如何主动捕获并处理构建错误(用途：捕获异常错误码进行上报)<br>compiler在每次构建结束后会触发done这个hook<br>process.exit主动处理构建报错<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">    ... </span><br><span class="line">    plugins: [</span><br><span class="line">        function() &#123;</span><br><span class="line">            this.hooks.done.tap(&#39;done&#39;, stats&#x3D;&gt;&#123;</span><br><span class="line">                if (stats.compilation.errors &amp;&amp; stats.compilation.errors.length &amp;&amp; process.argv.indexOf(&#39;--watch&#39;) &#x3D;&#x3D; -1) &#123;</span><br><span class="line">                    console.log(&#39;build error&#39;);</span><br><span class="line">                    process.exit(1); &#x2F;&#x2F; 设定错误码为1</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h3 id="3、构建配置包设计"><a href="#3、构建配置包设计" class="headerlink" title="3、构建配置包设计"></a>3、构建配置包设计</h3><ol>
+<li>构建配置抽离成npm包的意义<br>(1).通用性</li>
+</ol>
+<ul>
+<li>业务开发者无需关注构建配置</li>
+<li>统一团队构建脚本<br>(2).可维护性</li>
+<li>构建配置合理的拆分</li>
+<li>README文档、ChangeLog文档等<br>(3).质量</li>
+<li>冒烟测试、单元测试、测试覆盖率</li>
+<li>持续继承</li>
+</ul>
+<ol start="2">
+<li>构建配置管理的可选方案<br>(1).通过多个配置文件管理不同环境的构建，webpack –config参数进行配置</li>
+</ol>
+<ul>
+<li>基础配置： webpack.base.js</li>
+<li>开发环境： webpack.dev.js</li>
+<li>生产环境： webpack.prod.js</li>
+<li>SSR环境：  webpack.ssr.js<br>…<br>(2).将构建配置设计成一个库,比如：hjs-webpack、webpack-blocks</li>
+<li>规范： Git commit日志、README、ESLint规范、semver规范</li>
+<li>质量： 冒烟测试、单元测试、测试覆盖率<br>(3).抽成一个工具进行管理,比如:create-react-app<br>(4）.将所有的配置放在一个文件，通过–env参数控制分支选择</li>
+</ul>
+<ol start="3">
+<li>通过webpack-merge组合配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">merge &#x3D; require(&#39;webpack-merge&#39;)</span><br><span class="line">module.exports &#x3D; merge(baseconfig, config)</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/07/20/webpack-day5/" data-id="ckcuign6s0000a4xu60cmgzw3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webpack-day4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/07/09/webpack-day4/" class="article-date">
@@ -685,6 +825,10 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
       <ul>
         
           <li>
+            <a href="/2020/07/20/webpack-day5/">webpack-day5</a>
+          </li>
+        
+          <li>
             <a href="/2020/07/09/webpack-day4/">webpack-day4</a>
           </li>
         
@@ -698,10 +842,6 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
         
           <li>
             <a href="/2020/07/04/webpack%E7%AC%94%E8%AE%B01/">webpack笔记1</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/04/hahaha/">hahaha</a>
           </li>
         
       </ul>
