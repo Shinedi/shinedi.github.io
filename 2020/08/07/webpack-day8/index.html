@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>webpack-day8 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1、webpack启动过程分析 开始：从webpack命令行说起通过npm scripts运行webpack   开发环境：npm run dev 生产环境：npm run build   通过webpack直接运行webpack entry.js bundle.js &#x2F;&#x2F; 查找入口文件并打包成bundle.js  查找webpack入口文件在命令行运行以上命令后，npm 会让命令行工具进入nod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack-day8">
+<meta property="og:url" content="http://yoursite.com/2020/08/07/webpack-day8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、webpack启动过程分析 开始：从webpack命令行说起通过npm scripts运行webpack   开发环境：npm run dev 生产环境：npm run build   通过webpack直接运行webpack entry.js bundle.js &#x2F;&#x2F; 查找入口文件并打包成bundle.js  查找webpack入口文件在命令行运行以上命令后，npm 会让命令行工具进入nod">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-07T01:38:12.000Z">
+<meta property="article:modified_time" content="2020-08-14T06:12:04.723Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-webpack-day8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/07/webpack-day8/" class="article-date">
+  <time datetime="2020-08-07T01:38:12.000Z" itemprop="datePublished">2020-08-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webpack-day8
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、webpack启动过程分析"><a href="#1、webpack启动过程分析" class="headerlink" title="1、webpack启动过程分析"></a>1、webpack启动过程分析</h4><ol>
+<li>开始：从webpack命令行说起<br>通过npm scripts运行webpack</li>
+</ol>
+<ul>
+<li>开发环境：npm run dev</li>
+<li>生产环境：npm run build</li>
+</ul>
+<ol start="2">
+<li><p>通过webpack直接运行<br>webpack entry.js bundle.js // 查找入口文件并打包成bundle.js</p>
+</li>
+<li><p>查找webpack入口文件<br>在命令行运行以上命令后，npm 会让命令行工具进入node_modules.bin目录查找是否存在webpack.sh或者webpack.cmd文件，如果存在就执行，如果不存在就报错<br>实际的入口文件是：node_modules/webpack/bin/webpack.js<br>(webpack下的package.json中配置了bin字段)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;bin&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;bin&#x2F;webpack.js&quot;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分析入口文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">process.exitCode &#x3D; 0; &#x2F;&#x2F; 1.正常执行返回</span><br><span class="line">const runCommand &#x3D; (command, args) &#x3D;&gt; &#123;...&#125; &#x2F;&#x2F; 2.运行某个命令</span><br><span class="line">const isInstalled &#x3D; packageName &#x3D;&gt; &#123;...&#125; &#x2F;&#x2F; 3.判断某个包是否安装</span><br><span class="line">const CLIs &#x3D; [...] &#x2F;&#x2F; 4.webpack可用的cli: webpack-cli 和 webpack-command</span><br><span class="line">const installedClis &#x3D; CLIs.filter(cli &#x3D;&gt; cli.installed); &#x2F;&#x2F; 5. 判断2个cli是否安装了</span><br><span class="line">if (installedClis.length &#x3D;&#x3D;&#x3D; 0) &#123;...&#125;else if (installedClis.length &#x3D;&#x3D;&#x3D; 1) &#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="2、webpack-cli源码阅读"><a href="#2、webpack-cli源码阅读" class="headerlink" title="2、webpack-cli源码阅读"></a>2、webpack-cli源码阅读</h4><ol>
+<li><p>webpack-cli做的事情<br>引入yargs,对命令行进行定制<br>分析命令行参数,对各个参数进行转换,组成编译配置项<br>引用webpack,根据配置项进行编译和构建</p>
+</li>
+<li><p>从NON_COMPILATION_CMD分析出不需要编译的命令<br>webpack-cli处理不需要经过编译的命令(即不需要实例化webpack对象)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">const &#123;NON_COMPILATION_ARGS&#125; &#x3D; require(&#39;.&#x2F;utils&#x2F;constants&#39;);</span><br><span class="line">const NON_COMPILATION_CMD &#x3D; process.argv.find(arg &#x3D;&gt; &#123;</span><br><span class="line">		if (arg &#x3D;&#x3D;&#x3D; &quot;serve&quot;) &#123;</span><br><span class="line">			global.process.argv &#x3D; global.process.argv.filter(a &#x3D;&gt; a !&#x3D;&#x3D; &quot;serve&quot;);</span><br><span class="line">			process.argv &#x3D; global.process.argv;</span><br><span class="line">		&#125;</span><br><span class="line">		return NON_COMPILATION_ARGS.find(a &#x3D;&gt; a &#x3D;&#x3D;&#x3D; arg);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">if (NON_COMPILATION_CMD) &#123;</span><br><span class="line">		return require(&quot;.&#x2F;utils&#x2F;prompt-command&quot;)(NON_COMPILATION_CMD, ...process.argv);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>NON_COMPILATION_ARGS的内容<br>webpack-cli提供的不需要编译的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const NON_COMPILATION_ARGS &#x3D; [</span><br><span class="line">  &quot;init&quot;,  &#x2F;&#x2F; 创建一份webpack配置文件</span><br><span class="line">  &quot;migrate&quot;,  &#x2F;&#x2F; 进行webpack版本迁移</span><br><span class="line">  &quot;add&quot;,    &#x2F;&#x2F; 往webpack配置文件中增加属性</span><br><span class="line">  &quot;remove&quot;,    &#x2F;&#x2F; 往webpack配置文件中删除属性</span><br><span class="line">  &quot;serve&quot;,    &#x2F;&#x2F; 运行webpack-serve</span><br><span class="line">  &quot;generate-loader&quot;, &#x2F;&#x2F; 生成webpack loader代码</span><br><span class="line">  &quot;generate-plugin&quot;, &#x2F;&#x2F; 生成webpack plugin代码</span><br><span class="line">  &quot;info&quot; &#x2F;&#x2F; 返回与本地环境相关的一些信息</span><br><span class="line">  ];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>命令行工具包yargs介绍<br>提供命令和分组参数<br>可以执行./node_modules/.bin/webpack help看下</p>
+</li>
+<li><p>webpack-cli使用args分析<br>参数分组(config/config-yargs.js),将命令划分为9类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Config options: 配置相关参数(文件名称、运行环境等)</span><br><span class="line">Basic options: 基础参数(entry设置、debug模式设置、watch监听设置、devtool设置)</span><br><span class="line">Module options: 模块参数，给loader设置扩展</span><br><span class="line">Output options: 输出参数(输出路径、输出文件名称)</span><br><span class="line">Advanced options: 高级用法(记录设置、缓存设置、监听频率、bail等)</span><br><span class="line">Resolving options: 解析参数(alias和解析的文件后缀设置)</span><br><span class="line">Optimizing options: 优化参数</span><br><span class="line">Stats options: 统计参数</span><br><span class="line">options: 通用参数(帮助命令、版本信息等)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>webpack-cli执行的结果<br>webpack对配置文件和命令行参数进行转换最终生成配置选项参数options<br>最终会根据配置参数实例化webpack对象,然后执行构建流程</p>
+</li>
+</ol>
+<h4 id="3-Tapable插件结构与Hooks设计"><a href="#3-Tapable插件结构与Hooks设计" class="headerlink" title="3. Tapable插件结构与Hooks设计"></a>3. Tapable插件结构与Hooks设计</h4><ol>
+<li><p>webpack的本质<br>webpack可以将其理解是一种基于事件流的编程范例，一系列的插件运行</p>
+</li>
+<li><p>node_modules/webpack/bin/webpack.js中引入了compiler,compiler中又引入了Compilation对象，而这两个对象都继承了Tapable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 核心对象Compiler继承Tapable</span><br><span class="line">class Compiler extends Tapable &#123;</span><br><span class="line">  &#x2F;&#x2F; ...</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; 核心对象Compilation继承Tapable</span><br><span class="line">class Compilation extends Tapable &#123;</span><br><span class="line">  &#x2F;&#x2F; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Tapable是什么？<br>Tapable是一个类似于Node.js的eventEmiter的库,主要是控制钩子函数的发布与订阅,控制着webpack的插件系统<br>Tapable库暴露了很多Hook(钩子)类,为插件提供挂载的钩子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const &#123;</span><br><span class="line">  SyncHook, &#x2F;&#x2F; 同步钩子</span><br><span class="line">  SyncBailHook, &#x2F;&#x2F; 同步熔断钩子</span><br><span class="line">  SyncWaterfallHook, &#x2F;&#x2F; 同步流水钩子</span><br><span class="line">  SyncLoopHook, &#x2F;&#x2F; 同步循环钩子</span><br><span class="line">  AsyncParallelHook, &#x2F;&#x2F; 异步并发钩子</span><br><span class="line">  AsyncParallelBailHook, &#x2F;&#x2F; 异步并发熔断钩子</span><br><span class="line">  AsyncSeriesHook, &#x2F;&#x2F; 异步串行钩子</span><br><span class="line">  AsyncSeriesBailHook, &#x2F;&#x2F; 异步串行熔断钩子</span><br><span class="line">  AsyncSeriesWaterfallHook, &#x2F;&#x2F; 异步串行流水钩子</span><br><span class="line">&#125; &#x3D; require(&#39;Tapable&#39;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Tapable hooks类型</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>function</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hook</td>
+<td>所有类型的后缀</td>
+</tr>
+<tr>
+<td>Waterfall</td>
+<td>同步方法,但是它会传值给下一个函数</td>
+</tr>
+<tr>
+<td>Bail</td>
+<td>熔断： 当函数有任何返回值,就会在当前执行函数停止</td>
+</tr>
+<tr>
+<td>Loop</td>
+<td>监听函数返回true表示继续循环,返回undefined表示结束循环</td>
+</tr>
+<tr>
+<td>Sync</td>
+<td>同步方法</td>
+</tr>
+<tr>
+<td>AsyncSeries</td>
+<td>异步串行钩子</td>
+</tr>
+<tr>
+<td>AsyncParallel</td>
+<td>异步并行钩子</td>
+</tr>
+</tbody></table>
+<ol start="5">
+<li><p>Tapable的使用-new Hook新建钩子<br>Tapable暴露出来的都是类方法，new 一个类方法获得我们需要的钩子<br>class接受数组参数options，非必传。类方法会根据传参，接受同样数量的参数。<br>const hook1 = new SyncHook([‘args1’, ‘args2’, ‘args3’])</p>
+</li>
+<li><p>Tapable的使用-钩子的绑定与执行<br>Tapable提供了同步&amp;异步绑定钩子的方法，并且他们都有绑定事件和执行事件对应的方法</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Async *</th>
+<th>sync *</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>绑定:tapAsync/tapPromise/tap</td>
+<td>绑定: tap</td>
+</tr>
+<tr>
+<td>执行：callAsync/call</td>
+<td>执行：call</td>
+</tr>
+</tbody></table>
+<ol start="7">
+<li><p>Tapable的使用-hook基本用法示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const hook1 &#x3D; new SyncHook([&#39;args1&#39;, &#39;args2&#39;, &#39;args3&#39;]);</span><br><span class="line">&#x2F;&#x2F; 绑定事件到webpack事件流</span><br><span class="line">hook1.tap(&#39;hook1&#39;, (args1, arg2, arg3) &#x3D;&gt; &#123;</span><br><span class="line">  console.log(args1, arg2, arg3)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 执行绑定的事件</span><br><span class="line">hook1.call(1,2,3)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Tapable的使用-实际例子演示<br>定义一个Car方法,在内部Hooks上新建钩子。分别是同步钩子accelerate、brake(accelerate接受一个参数)、异步钩子caculateRoutes<br>使用钩子对应的绑定和执行方法<br>caculateRoutes使用tapPromise可以返回一个Promise对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">const &#123;</span><br><span class="line">    SyncHook,</span><br><span class="line">    AsyncSeriesHook</span><br><span class="line">&#125; &#x3D; require(&#39;tapable&#39;);</span><br><span class="line"></span><br><span class="line">class Car &#123;</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        this.hooks &#x3D; &#123;</span><br><span class="line">            accelerate: new SyncHook([&#39;newspeed&#39;]),</span><br><span class="line">            brake: new SyncHook(),</span><br><span class="line">            caculateRoutes: new AsyncSeriesHook([&#39;source&#39;, &#39;target&#39;, &#39;routes&#39;])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const myCar &#x3D; new Car();</span><br><span class="line"></span><br><span class="line">myCar.hooks.brake.tap(&#39;warningLampPlugin&#39;, ()&#x3D;&gt; console.log(&#39;warningLampPlugin&#39;));</span><br><span class="line">myCar.hooks.accelerate.tap(&#39;loggerPlugin&#39;, newSpeed &#x3D;&gt; &#123;</span><br><span class="line">    console.log(&#96;Accelerating to $&#123;newSpeed&#125;&#96;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">myCar.hooks.caculateRoutes.tapPromise(&#39;caculateRoutes tapPromise&#39;, (source, target, routeList, callback) &#x3D;&gt; &#123;</span><br><span class="line">    return new Promise((resolve, reject) &#x3D;&gt; &#123;</span><br><span class="line">        setTimeout(()&#x3D;&gt; &#123;</span><br><span class="line">            console.log(&#96;tapPromise to $&#123;source&#125; $&#123;target&#125; $&#123;routeList&#125;&#96;);</span><br><span class="line">            resolve()</span><br><span class="line">        &#125;, 1000)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">myCar.hooks.brake.call();</span><br><span class="line">myCar.hooks.accelerate.call(10);</span><br><span class="line"></span><br><span class="line">myCar.hooks.caculateRoutes.promise(&#39;Async&#39;, &#39;hook&#39;, &#39;demo&#39;).then(()&#x3D;&gt; &#123;</span><br><span class="line">    console.log(&#39;cost&#39;);</span><br><span class="line">&#125;, err &#x3D;&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">    console.timeEnd(&#39;cost&#39;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h4 id="4、Tapable是如何和webpack进行关联起来的"><a href="#4、Tapable是如何和webpack进行关联起来的" class="headerlink" title="4、Tapable是如何和webpack进行关联起来的"></a>4、Tapable是如何和webpack进行关联起来的</h4><ol>
+<li>原理：plugin监听hooks,compiler执行hook<br>compiler.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">const &#123;</span><br><span class="line">    SyncHook,</span><br><span class="line">    AsyncSeriesHook</span><br><span class="line">&#125; &#x3D; require(&#39;tapable&#39;);</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; class Compiler &#123;</span><br><span class="line">    constructor() &#123;</span><br><span class="line">        this.hooks &#x3D; &#123;</span><br><span class="line">            accelerate: new SyncHook([&#39;newspeed&#39;]),</span><br><span class="line">            brake: new SyncHook(),</span><br><span class="line">            caculateRoutes: new AsyncSeriesHook([&#39;source&#39;, &#39;target&#39;, &#39;routes&#39;])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    run () &#123;</span><br><span class="line">        this.accelerate(10);</span><br><span class="line">        this.brake()</span><br><span class="line">        this.caculateRoutes(&#39;Async&#39;, &#39;hook&#39;, &#39;demo&#39;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    accelerate (speed) &#123;</span><br><span class="line">        this.hooks.accelerate.call(speed);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    brake () &#123;</span><br><span class="line">        this.hooks.brake.call();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    caculateRoutes () &#123;</span><br><span class="line">        this.hooks.caculateRoutes.promise(...arguments).then(()&#x3D;&gt; &#123;</span><br><span class="line">        &#125;, err &#x3D;&gt; &#123;</span><br><span class="line">            console.log(err);</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+my-plugin.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">const Compiler &#x3D; require(&#39;.&#x2F;compiler.js&#39;);</span><br><span class="line"></span><br><span class="line">class Myplugin &#123;</span><br><span class="line">    constructor ()&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    apply (compiler) &#123;</span><br><span class="line">        &#x2F;&#x2F; 监听hook</span><br><span class="line">        compiler.hooks.brake.tap(&#39;warningLampPlugin&#39;, ()&#x3D;&gt; console.log(&#39;warningLampPlugin&#39;));</span><br><span class="line">        compiler.hooks.accelerate.tap(&#39;loggerPlugin&#39;, newSpeed &#x3D;&gt; &#123;</span><br><span class="line">            console.log(&#96;Accelerating to $&#123;newSpeed&#125;&#96;)</span><br><span class="line">        &#125;)</span><br><span class="line">        compiler.hooks.caculateRoutes.tapPromise(&#39;caculateRoutes tapPromise&#39;, (source, target, routeList, callback) &#x3D;&gt; &#123;</span><br><span class="line">            return new Promise((resolve, reject) &#x3D;&gt; &#123;</span><br><span class="line">                setTimeout(()&#x3D;&gt; &#123;</span><br><span class="line">                    console.log(&#96;tapPromise to $&#123;source&#125; $&#123;target&#125; $&#123;routeList&#125;&#96;);</span><br><span class="line">                    resolve()</span><br><span class="line">                &#125;, 1000)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const myPlugin &#x3D; new Myplugin();</span><br><span class="line"></span><br><span class="line">const options &#x3D; &#123;</span><br><span class="line">    plugins: [ myPlugin ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const compiler &#x3D; new Compiler();</span><br><span class="line"></span><br><span class="line">for(let plugin of options.plugins) &#123;</span><br><span class="line">    if (typeof plugin &#x3D;&#x3D;&#x3D; &#39;function&#39;) &#123;</span><br><span class="line">        plugin.call(compiler, compiler)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        plugin.apply(compiler)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">compiler.run();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/07/webpack-day8/" data-id="ckdtu9b190000m8l28ado7tny" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/28/webpack-day7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">webpack-day7</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/08/07/webpack-day8/">webpack-day8</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/webpack-day7/">webpack-day7</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/21/webpack-day6/">webpack-day6</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/20/webpack-day5/">webpack-day5</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/09/webpack-day4/">webpack-day4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
