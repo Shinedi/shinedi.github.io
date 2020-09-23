@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-920" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/21/vue-920/" class="article-date">
+  <time datetime="2020-09-21T06:11:20.000Z" itemprop="datePublished">2020-09-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/21/vue-920/">vue-920</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、JSONP原理"><a href="#1、JSONP原理" class="headerlink" title="1、JSONP原理"></a>1、JSONP原理</h4><p>可以通过scripts跨域请求，其思路：生成一个script标签,传入一个回调名称，如jsonpCallback=’jsonpCBKD’，绑定在window对象上，待接口返回结果，会去调window.jsonpCBKD函数，再把数据送出去( <a href="https://github.com/webmodules/jsonp" target="_blank" rel="noopener">JSONP</a>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * Module dependencies</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">var debug &#x3D; require(&#39;debug&#39;)(&#39;jsonp&#39;);</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Module exports.</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; jsonp;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Callback index.</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">var count &#x3D; 0;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Noop function.</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">function noop()&#123;&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * JSONP handler</span><br><span class="line"> *</span><br><span class="line"> * Options:</span><br><span class="line"> *  - param &#123;String&#125; qs parameter (&#96;callback&#96;)</span><br><span class="line"> *  - prefix &#123;String&#125; qs parameter (&#96;__jp&#96;)</span><br><span class="line"> *  - name &#123;String&#125; qs parameter (&#96;prefix&#96; + incr)</span><br><span class="line"> *  - timeout &#123;Number&#125; how long after a timeout error is emitted (&#96;60000&#96;)</span><br><span class="line"> *</span><br><span class="line"> * @param &#123;String&#125; url</span><br><span class="line"> * @param &#123;Object|Function&#125; optional options &#x2F; callback</span><br><span class="line"> * @param &#123;Function&#125; optional callback</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">function jsonp(url, opts, fn)&#123;</span><br><span class="line">  if (&#39;function&#39; &#x3D;&#x3D; typeof opts) &#123;</span><br><span class="line">    fn &#x3D; opts;</span><br><span class="line">    opts &#x3D; &#123;&#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  if (!opts) opts &#x3D; &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  var prefix &#x3D; opts.prefix || &#39;__jp&#39;;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; use the callback name that was passed if one was provided.</span><br><span class="line">  &#x2F;&#x2F; otherwise generate a unique name by incrementing our counter.</span><br><span class="line">  &#x2F;&#x2F; 绑定在window对象上的函数名称</span><br><span class="line">  var id &#x3D; opts.name || (prefix + (count++));</span><br><span class="line">  &#x2F;&#x2F; 参数名称</span><br><span class="line">  var param &#x3D; opts.param || &#39;callback&#39;;</span><br><span class="line">  var timeout &#x3D; null !&#x3D; opts.timeout ? opts.timeout : 60000;</span><br><span class="line">  var enc &#x3D; encodeURIComponent;</span><br><span class="line">  var target &#x3D; document.getElementsByTagName(&#39;script&#39;)[0] || document.head;</span><br><span class="line">  var script;</span><br><span class="line">  var timer;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  if (timeout) &#123;</span><br><span class="line">    timer &#x3D; setTimeout(function()&#123;</span><br><span class="line">      cleanup();</span><br><span class="line">      if (fn) fn(new Error(&#39;Timeout&#39;));</span><br><span class="line">    &#125;, timeout);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function cleanup()&#123;</span><br><span class="line">    if (script.parentNode) script.parentNode.removeChild(script);</span><br><span class="line">    window[id] &#x3D; noop;</span><br><span class="line">    if (timer) clearTimeout(timer);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  function cancel()&#123;</span><br><span class="line">    if (window[id]) &#123;</span><br><span class="line">      cleanup();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  window[id] &#x3D; function(data)&#123;</span><br><span class="line">    debug(&#39;jsonp got&#39;, data);</span><br><span class="line">    cleanup();</span><br><span class="line">    if (fn) fn(null, data);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; add qs component</span><br><span class="line">  url +&#x3D; (~url.indexOf(&#39;?&#39;) ? &#39;&amp;&#39; : &#39;?&#39;) + param + &#39;&#x3D;&#39; + enc(id);</span><br><span class="line">  url &#x3D; url.replace(&#39;?&amp;&#39;, &#39;?&#39;);</span><br><span class="line"></span><br><span class="line">  debug(&#39;jsonp req &quot;%s&quot;&#39;, url);</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; create script</span><br><span class="line">  script &#x3D; document.createElement(&#39;script&#39;);</span><br><span class="line">  script.src &#x3D; url;</span><br><span class="line">  target.parentNode.insertBefore(script, target);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、JSONP封装调用"><a href="#2、JSONP封装调用" class="headerlink" title="2、JSONP封装调用"></a>2、JSONP封装调用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import OriginJsonp from &#39;jsonp&#39;</span><br><span class="line"></span><br><span class="line">export default function jsonp (url, data, option) &#123;</span><br><span class="line">    url +&#x3D; (url.indexOf(&#39;?&#39;) &lt; 0 ? &#39;?&#39; : &#39;&amp;&#39;) + param(data);</span><br><span class="line">    url &#x3D; url.replace(&#39;?&amp;&#39;,&#39;?&#39;)</span><br><span class="line">    return new Promise((resolve, reject) &#x3D;&gt; &#123;</span><br><span class="line">        OriginJsonp(url, option, (err, info) &#x3D;&gt; &#123;</span><br><span class="line">            if (!err) &#123;</span><br><span class="line">                resolve(info)</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                reject(err)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;) </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function param(params) &#123;</span><br><span class="line">    let paramTemp &#x3D; &#39;&#39;</span><br><span class="line">    for (let k in params) &#123;</span><br><span class="line">        paramTemp +&#x3D; &#96;&amp;$&#123;k&#125;&#x3D;$&#123;params[k] !&#x3D; &#39;undefined&#39; ? encodeURIComponent(params[k]) : &#39;&#39;&#125;&#96;</span><br><span class="line">    &#125;</span><br><span class="line">    return paramTemp</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、keep-alive"><a href="#3、keep-alive" class="headerlink" title="3、keep-alive"></a>3、keep-alive</h4><p>在路由切换时，切换的组件又会重新加载，解决方法：可以在router-view外层加上keep-alive</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;keep-alive&gt;</span><br><span class="line">  &lt;router-view&gt;&lt;&#x2F;router-view&gt;</span><br><span class="line">&lt;&#x2F;keep-alive&gt;</span><br></pre></td></tr></table></figure>
+<p>被keep-alive包裹的组件中，会多出两个生命周期钩子： activated和deactivated</p>
+<ul>
+<li>activated:在组件第一次渲染时会被调用，之后在每次缓存组件被激活时调用。(第一次进入缓存路由/组件，在mounted后面)</li>
+<li>deactivated：组件被停用(离开路由)时调用,使用了keep-alive就不会调用beforeDestroy(组件销毁前钩子)和destroyed(组件销毁)，因为组件没被销毁，被缓存起来了。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/09/21/vue-920/" data-id="ckfera4990000e3l2689l5kwd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-918" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/18/vue-918/" class="article-date">
@@ -1218,42 +1266,6 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
 
 
   
-    <article id="post-hahaha" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/04/hahaha/" class="article-date">
-  <time datetime="2020-07-04T15:27:27.000Z" itemprop="datePublished">2020-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/04/hahaha/">hahaha</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/04/hahaha/" data-id="ckc7svzdu0000unxu0klw9git" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1290,6 +1302,10 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
       <ul>
         
           <li>
+            <a href="/2020/09/21/vue-920/">vue-920</a>
+          </li>
+        
+          <li>
             <a href="/2020/09/18/vue-918/">vue-918</a>
           </li>
         
@@ -1303,10 +1319,6 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
         
           <li>
             <a href="/2020/07/21/webpack-day6/">webpack-day6</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/20/webpack-day5/">webpack-day5</a>
           </li>
         
       </ul>
