@@ -64,6 +64,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue-924" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/24/vue-924/" class="article-date">
+  <time datetime="2020-09-24T03:45:35.000Z" itemprop="datePublished">2020-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/24/vue-924/">vue-924</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、vue-lazyload"><a href="#1、vue-lazyload" class="headerlink" title="1、vue-lazyload"></a>1、vue-lazyload</h4><p>图片过多时，可以使用vue-lazyload库进行懒加载</p>
+<ul>
+<li>npm i vue-lazyload<br>main.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import VueLazyLoad from &#39;vue-lazy-load&#39;</span><br><span class="line">Vue.use(VueLazyLoad, &#123;</span><br><span class="line">    default: &#39;默认图片&#39; &#x2F;&#x2F; 在图片没加载时，显示默认图片</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img v-lazy&#x3D;&quot;link&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="2、获取html里面的属性"><a href="#2、获取html里面的属性" class="headerlink" title="2、获取html里面的属性"></a>2、获取html里面的属性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;singer&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;singer&quot; v-for&#x3D;&quot;(item, index) in singers&quot; @touchstart&#x3D;&quot;touchEvent&quot;   data-index&#x3D;&quot;index&quot;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">...</span><br><span class="line">touchEvent(e)&#123;</span><br><span class="line">    let index &#x3D; e.target.getAttribute(&#39;data-index&#39;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取touchs的pageY<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let firstTouch &#x3D; e.touchs[0];</span><br><span class="line">this.touch.y2 &#x3D; firstTouch.pageY;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3、页面A里面添加子路由"><a href="#3、页面A里面添加子路由" class="headerlink" title="3、页面A里面添加子路由"></a>3、页面A里面添加子路由</h4><ul>
+<li>router/index.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    path: &#39;&#x2F;singer&#39;,</span><br><span class="line">    component: Singer,</span><br><span class="line">    children: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: &#39;:id&#39;,</span><br><span class="line">            component: SingerDetail</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>页面A<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">selectSinger (singer) &#123;</span><br><span class="line">   this.$router.push(&#123;</span><br><span class="line">   path: &#96;&#x2F;singer&#x2F;$&#123;singer.id&#125;&#96;</span><br><span class="line">   &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="4、Vuex-是什么"><a href="#4、Vuex-是什么" class="headerlink" title="4、Vuex 是什么?"></a>4、Vuex 是什么?</h4><p>Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。<br>(1) 、解决了什么问题？</p>
+<ul>
+<li><p>多个视图依赖于同一状态。</p>
+</li>
+<li><p>来自不同视图的行为需要变更同一状态。</p>
+<p>对于问题一，传参的方法对于多层嵌套的组件将会非常繁琐，并且对于兄弟组件间的状态传递无能为力。对于问题二，我们经常会采用父子组件直接引用或者通过事件来变更和同步状态的多份拷贝。以上的这些模式非常脆弱，通常会导致无法维护的代码。</p>
+<p>因此，我们为什么不把组件的共享状态抽取出来，以一个全局单例模式管理呢？在这种模式下，我们的组件树构成了一个巨大的“视图”，不管在树的哪个位置，任何组件都能获取状态或者触发行为！</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/09/24/vue-924/" data-id="ckg6i8w4h0000mgl2a32dc5dw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vue-920" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/21/vue-920/" class="article-date">
@@ -1229,43 +1293,6 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
 
 
   
-    <article id="post-webpack笔记1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/04/webpack%E7%AC%94%E8%AE%B01/" class="article-date">
-  <time datetime="2020-07-04T15:33:29.861Z" itemprop="datePublished">2020-07-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/04/webpack%E7%AC%94%E8%AE%B01/">webpack笔记1</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>###loaders<br>    npm i @babel/core @babel/preset-env babel/loader -D</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/04/webpack%E7%AC%94%E8%AE%B01/" data-id="ckc7t3zpu0000hkxudydn5o3d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1302,6 +1329,10 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
       <ul>
         
           <li>
+            <a href="/2020/09/24/vue-924/">vue-924</a>
+          </li>
+        
+          <li>
             <a href="/2020/09/21/vue-920/">vue-920</a>
           </li>
         
@@ -1315,10 +1346,6 @@ htmlwebpackPlugin中加入chunks<figure class="highlight plain"><table><tr><td c
         
           <li>
             <a href="/2020/07/28/webpack-day7/">webpack-day7</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/21/webpack-day6/">webpack-day6</a>
           </li>
         
       </ul>

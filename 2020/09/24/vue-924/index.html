@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>vue-924 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1、vue-lazyload图片过多时，可以使用vue-lazyload库进行懒加载  npm i vue-lazyloadmain.js1234import VueLazyLoad from &#39;vue-lazy-load&#39;Vue.use(VueLazyLoad, &amp;#123;    default: &#39;默认图片&#39; &#x2F;&#x2F; 在图片没加载时，显示默认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-924">
+<meta property="og:url" content="http://yoursite.com/2020/09/24/vue-924/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1、vue-lazyload图片过多时，可以使用vue-lazyload库进行懒加载  npm i vue-lazyloadmain.js1234import VueLazyLoad from &#39;vue-lazy-load&#39;Vue.use(VueLazyLoad, &amp;#123;    default: &#39;默认图片&#39; &#x2F;&#x2F; 在图片没加载时，显示默认">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-09-24T03:45:35.000Z">
+<meta property="article:modified_time" content="2020-10-12T12:20:28.907Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-vue-924" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/24/vue-924/" class="article-date">
+  <time datetime="2020-09-24T03:45:35.000Z" itemprop="datePublished">2020-09-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue-924
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="1、vue-lazyload"><a href="#1、vue-lazyload" class="headerlink" title="1、vue-lazyload"></a>1、vue-lazyload</h4><p>图片过多时，可以使用vue-lazyload库进行懒加载</p>
+<ul>
+<li>npm i vue-lazyload<br>main.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import VueLazyLoad from &#39;vue-lazy-load&#39;</span><br><span class="line">Vue.use(VueLazyLoad, &#123;</span><br><span class="line">    default: &#39;默认图片&#39; &#x2F;&#x2F; 在图片没加载时，显示默认图片</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img v-lazy&#x3D;&quot;link&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="2、获取html里面的属性"><a href="#2、获取html里面的属性" class="headerlink" title="2、获取html里面的属性"></a>2、获取html里面的属性</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;singer&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;singer&quot; v-for&#x3D;&quot;(item, index) in singers&quot; @touchstart&#x3D;&quot;touchEvent&quot;   data-index&#x3D;&quot;index&quot;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">...</span><br><span class="line">touchEvent(e)&#123;</span><br><span class="line">    let index &#x3D; e.target.getAttribute(&#39;data-index&#39;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取touchs的pageY<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let firstTouch &#x3D; e.touchs[0];</span><br><span class="line">this.touch.y2 &#x3D; firstTouch.pageY;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3、页面A里面添加子路由"><a href="#3、页面A里面添加子路由" class="headerlink" title="3、页面A里面添加子路由"></a>3、页面A里面添加子路由</h4><ul>
+<li>router/index.js<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    path: &#39;&#x2F;singer&#39;,</span><br><span class="line">    component: Singer,</span><br><span class="line">    children: [</span><br><span class="line">        &#123;</span><br><span class="line">            path: &#39;:id&#39;,</span><br><span class="line">            component: SingerDetail</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>页面A<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">selectSinger (singer) &#123;</span><br><span class="line">   this.$router.push(&#123;</span><br><span class="line">   path: &#96;&#x2F;singer&#x2F;$&#123;singer.id&#125;&#96;</span><br><span class="line">   &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="4、Vuex-是什么"><a href="#4、Vuex-是什么" class="headerlink" title="4、Vuex 是什么?"></a>4、Vuex 是什么?</h4><p>Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。<br>(1) 、解决了什么问题？</p>
+<ul>
+<li><p>多个视图依赖于同一状态。</p>
+</li>
+<li><p>来自不同视图的行为需要变更同一状态。</p>
+<p>对于问题一，传参的方法对于多层嵌套的组件将会非常繁琐，并且对于兄弟组件间的状态传递无能为力。对于问题二，我们经常会采用父子组件直接引用或者通过事件来变更和同步状态的多份拷贝。以上的这些模式非常脆弱，通常会导致无法维护的代码。</p>
+<p>因此，我们为什么不把组件的共享状态抽取出来，以一个全局单例模式管理呢？在这种模式下，我们的组件树构成了一个巨大的“视图”，不管在树的哪个位置，任何组件都能获取状态或者触发行为！</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/09/24/vue-924/" data-id="ckg6i8w4h0000mgl2a32dc5dw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/09/21/vue-920/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vue-920</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/09/24/vue-924/">vue-924</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/21/vue-920/">vue-920</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/18/vue-918/">vue-918</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/07/webpack-day8/">webpack-day8</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/28/webpack-day7/">webpack-day7</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
