@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>vue-prin4 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Vue 实例挂载的实现 Vue 中我们是通过 $mount 实例方法去挂载 vm 的，$mount 方法在多个文件中都有定义，如 src&#x2F;platform&#x2F;web&#x2F;entry-runtime-with-compiler.js、src&#x2F;platform&#x2F;web&#x2F;runtime&#x2F;index.js、src&#x2F;platform&#x2F;weex&#x2F;runtime&#x2F;index.js。因为 $mount这个方法的实现是和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-prin4">
+<meta property="og:url" content="http://yoursite.com/2020/10/26/vue-prin4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Vue 实例挂载的实现 Vue 中我们是通过 $mount 实例方法去挂载 vm 的，$mount 方法在多个文件中都有定义，如 src&#x2F;platform&#x2F;web&#x2F;entry-runtime-with-compiler.js、src&#x2F;platform&#x2F;web&#x2F;runtime&#x2F;index.js、src&#x2F;platform&#x2F;weex&#x2F;runtime&#x2F;index.js。因为 $mount这个方法的实现是和">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-26T13:03:43.000Z">
+<meta property="article:modified_time" content="2020-10-26T13:12:20.604Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-vue-prin4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/26/vue-prin4/" class="article-date">
+  <time datetime="2020-10-26T13:03:43.000Z" itemprop="datePublished">2020-10-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      vue-prin4
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="Vue-实例挂载的实现"><a href="#Vue-实例挂载的实现" class="headerlink" title="Vue 实例挂载的实现"></a>Vue 实例挂载的实现</h4><hr>
+<p>Vue 中我们是通过 <code>$mount</code> 实例方法去挂载 <code>vm</code> 的，<code>$mount</code> 方法在多个文件中都有定义，如 <code>src/platform/web/entry-runtime-with-compiler.js</code>、<code>src/platform/web/runtime/index.js</code>、<code>src/platform/weex/runtime/index.js</code>。因为 <code>$mount</code>这个方法的实现是和平台、构建方式都相关的。接下来我们重点分析带 <code>compiler</code> 版本的 <code>$mount</code> 实现，因为抛开 webpack 的 vue-loader，我们在纯前端浏览器环境分析 Vue 的工作原理，有助于我们对原理理解的深入。</p>
+<figure class="highlight plain"><figcaption><span>版本的``` $mount``` 实现非常有意思，先来看一下 ```src/platform/web/entry-runtime-with-compiler.js``` 文件中定义：</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">&#96;&#96;&#96;</span><br><span class="line">const mount &#x3D; Vue.prototype.$mount</span><br><span class="line">Vue.prototype.$mount &#x3D; function (</span><br><span class="line">  el?: string | Element,</span><br><span class="line">  hydrating?: boolean</span><br><span class="line">): Component &#123;</span><br><span class="line">  el &#x3D; el &amp;&amp; query(el)</span><br><span class="line"></span><br><span class="line">  &#x2F;* istanbul ignore if *&#x2F;</span><br><span class="line">  if (el &#x3D;&#x3D;&#x3D; document.body || el &#x3D;&#x3D;&#x3D; document.documentElement) &#123;</span><br><span class="line">    process.env.NODE_ENV !&#x3D;&#x3D; &#39;production&#39; &amp;&amp; warn(</span><br><span class="line">      &#96;Do not mount Vue to &lt;html&gt; or &lt;body&gt; - mount to normal elements instead.&#96;</span><br><span class="line">    )</span><br><span class="line">    return this</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  const options &#x3D; this.$options</span><br><span class="line">  &#x2F;&#x2F; resolve template&#x2F;el and convert to render function</span><br><span class="line">  if (!options.render) &#123;</span><br><span class="line">    let template &#x3D; options.template</span><br><span class="line">    if (template) &#123;</span><br><span class="line">      if (typeof template &#x3D;&#x3D;&#x3D; &#39;string&#39;) &#123;</span><br><span class="line">        if (template.charAt(0) &#x3D;&#x3D;&#x3D; &#39;#&#39;) &#123;</span><br><span class="line">          template &#x3D; idToTemplate(template)</span><br><span class="line">          &#x2F;* istanbul ignore if *&#x2F;</span><br><span class="line">          if (process.env.NODE_ENV !&#x3D;&#x3D; &#39;production&#39; &amp;&amp; !template) &#123;</span><br><span class="line">            warn(</span><br><span class="line">              &#96;Template element not found or is empty: $&#123;options.template&#125;&#96;,</span><br><span class="line">              this</span><br><span class="line">            )</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else if (template.nodeType) &#123;</span><br><span class="line">        template &#x3D; template.innerHTML</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if (process.env.NODE_ENV !&#x3D;&#x3D; &#39;production&#39;) &#123;</span><br><span class="line">          warn(&#39;invalid template option:&#39; + template, this)</span><br><span class="line">        &#125;</span><br><span class="line">        return this</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; else if (el) &#123;</span><br><span class="line">      template &#x3D; getOuterHTML(el)</span><br><span class="line">    &#125;</span><br><span class="line">    if (template) &#123;</span><br><span class="line">      &#x2F;* istanbul ignore if *&#x2F;</span><br><span class="line">      if (process.env.NODE_ENV !&#x3D;&#x3D; &#39;production&#39; &amp;&amp; config.performance &amp;&amp; mark) &#123;</span><br><span class="line">        mark(&#39;compile&#39;)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      const &#123; render, staticRenderFns &#125; &#x3D; compileToFunctions(template, &#123;</span><br><span class="line">        shouldDecodeNewlines,</span><br><span class="line">        shouldDecodeNewlinesForHref,</span><br><span class="line">        delimiters: options.delimiters,</span><br><span class="line">        comments: options.comments</span><br><span class="line">      &#125;, this)</span><br><span class="line">      options.render &#x3D; render</span><br><span class="line">      options.staticRenderFns &#x3D; staticRenderFns</span><br><span class="line"></span><br><span class="line">      &#x2F;* istanbul ignore if *&#x2F;</span><br><span class="line">      if (process.env.NODE_ENV !&#x3D;&#x3D; &#39;production&#39; &amp;&amp; config.performance &amp;&amp; mark) &#123;</span><br><span class="line">        mark(&#39;compile end&#39;)</span><br><span class="line">        measure(&#96;vue $&#123;this._name&#125; compile&#96;, &#39;compile&#39;, &#39;compile end&#39;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return mount.call(this, el, hydrating)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码首先缓存了原型上的 <code>$mount</code> 方法，再重新定义该方法，我们先来分析这段代码。首先，它对 <code>el</code> 做了限制，Vue 不能挂载在 <code>body</code>、<code>html</code>这样的根节点上。接下来的是很关键的逻辑 —— 如果没有定义 <code>render</code> 方法，则会把 <code>el</code> 或者 <code>template</code> 字符串转换成 <code>render</code>方法。这里我们要牢记，在 Vue 2.0 版本中，所有 Vue 的组件的渲染最终都需要 <code>render</code> 方法，无论我们是用单文件 .vue 方式开发组件，还是写了 <code>el</code> 或者 <code>template</code> 属性，最终都会转换成 <code>render</code> 方法，那么这个过程是 Vue 的一个“在线编译”的过程，它是调用 <code>compileToFunctions</code> 方法实现的，编译过程我们之后会介绍。最后，调用原先原型上的 <code>$mount</code> 方法挂载。</p>
+<p>原先原型上的 <code>$mount</code> 方法在 <code>src/platform/web/runtime/index.js</code> 中定义，之所以这么设计完全是为了复用，因为它是可以被 <code>runtime only</code> 版本的 Vue 直接使用的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; public mount method</span><br><span class="line">Vue.prototype.$mount &#x3D; function (</span><br><span class="line">  el?: string | Element,</span><br><span class="line">  hydrating?: boolean</span><br><span class="line">): Component &#123;</span><br><span class="line">  el &#x3D; el &amp;&amp; inBrowser ? query(el) : undefined</span><br><span class="line">  return mountComponent(this, el, hydrating)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>方法支持传入 2 个参数，第一个是 ```el```，它表示挂载的元素，可以是字符串，也可以是 DOM 对象，如果是字符串在浏览器环境下会调用 ```query``` 方法转换成 DOM 对象的。第二个参数是和服务端渲染相关，在浏览器环境下我们不需要传第二个参数。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#96;&#96;&#96;$mount&#96;&#96;&#96; 方法实际上会去调用 &#96;&#96;&#96;mountComponent&#96;&#96;&#96; 方法，这个方法定义在 &#96;&#96;&#96;src&#x2F;core&#x2F;instance&#x2F;lifecycle.js&#96;&#96;&#96; 文件中：</span><br></pre></td></tr></table></figure>
+<p>export function mountComponent (<br>  vm: Component,<br>  el: ?Element,<br>  hydrating?: boolean<br>): Component {<br>  vm.$el = el<br>  if (!vm.$options.render) {<br>    vm.$options.render = createEmptyVNode<br>    if (process.env.NODE_ENV !== ‘production’) {<br>      /* istanbul ignore if */<br>      if ((vm.$options.template &amp;&amp; vm.$options.template.charAt(0) !== ‘#’) ||<br>        vm.$options.el || el) {<br>        warn(<br>          ‘You are using the runtime-only build of Vue where the template ‘ +<br>          ‘compiler is not available. Either pre-compile the templates into ‘ +<br>          ‘render functions, or use the compiler-included build.’,<br>          vm<br>        )<br>      } else {<br>        warn(<br>          ‘Failed to mount component: template or render function not defined.’,<br>          vm<br>        )<br>      }<br>    }<br>  }<br>  callHook(vm, ‘beforeMount’)</p>
+<p>  let updateComponent<br>  /* istanbul ignore if */<br>  if (process.env.NODE_ENV !== ‘production’ &amp;&amp; config.performance &amp;&amp; mark) {<br>    updateComponent = () =&gt; {<br>      const name = vm._name<br>      const id = vm._uid<br>      const startTag = <code>vue-perf-start:${id}</code><br>      const endTag = <code>vue-perf-end:${id}</code></p>
+<pre><code>  mark(startTag)
+  const vnode = vm._render()
+  mark(endTag)
+  measure(`vue ${name} render`, startTag, endTag)
+
+  mark(startTag)
+  vm._update(vnode, hydrating)
+  mark(endTag)
+  measure(`vue ${name} patch`, startTag, endTag)
+}</code></pre><p>  } else {<br>    updateComponent = () =&gt; {<br>      vm._update(vm._render(), hydrating)<br>    }<br>  }</p>
+<p>  // we set this to vm._watcher inside the watcher’s constructor<br>  // since the watcher’s initial patch may call $forceUpdate (e.g. inside child<br>  // component’s mounted hook), which relies on vm._watcher being already defined<br>  new Watcher(vm, updateComponent, noop, {<br>    before () {<br>      if (vm._isMounted) {<br>        callHook(vm, ‘beforeUpdate’)<br>      }<br>    }<br>  }, true /* isRenderWatcher */)<br>  hydrating = false</p>
+<p>  // manually mounted instance, call mounted on self<br>  // mounted is called for render-created child components in its inserted hook<br>  if (vm.$vnode == null) {<br>    vm._isMounted = true<br>    callHook(vm, ‘mounted’)<br>  }<br>  return vm<br>}</p>
+<pre><code>从上面的代码可以看到，```mountComponent ```核心就是先实例化一个渲染```Watcher```，在它的回调函数中会调用 ```updateComponent``` 方法，在此方法中调用 ```vm._render``` 方法先生成虚拟 Node，最终调用 ```vm._update``` 更新 DOM。
+
+```Watcher``` 在这里起到两个作用，一个是初始化的时候会执行回调函数，另一个是当 vm 实例中的监测的数据发生变化的时候执行回调函数，这块儿我们会在之后的章节中介绍。
+
+函数最后判断为根节点的时候设置 ```vm._isMounted``` 为 ```true```， 表示这个实例已经挂载了，同时执行 ```mounted``` 钩子函数。 这里注意 ```vm.$vnode ```表示 Vue 实例的父虚拟 Node，所以它为 ```Null```则表示当前是根 Vue 的实例。
+
+#### 总结
+---
+```mountComponent``` 方法的逻辑也是非常清晰的，它会完成整个渲染工作，接下来我们要重点分析其中的细节，也就是最核心的 2 个方法：```vm._render``` 和 ```vm._update```。
+
+
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/10/26/vue-prin4/" data-id="ckgqk9clf00001el2fq2r6ns1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/10/22/vue-prin3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vue-prin3</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/26/vue-prin4/">vue-prin4</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/22/vue-prin3/">vue-prin3</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/21/vue-prin2/">vue-prin2</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/19/vue-prin1/">vue-prin1</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/24/vue-924/">vue-924</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
