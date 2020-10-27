@@ -15,7 +15,7 @@
 <meta property="og:description" content="Vue 实例挂载的实现 Vue 中我们是通过 $mount 实例方法去挂载 vm 的，$mount 方法在多个文件中都有定义，如 src&#x2F;platform&#x2F;web&#x2F;entry-runtime-with-compiler.js、src&#x2F;platform&#x2F;web&#x2F;runtime&#x2F;index.js、src&#x2F;platform&#x2F;weex&#x2F;runtime&#x2F;index.js。因为 $mount这个方法的实现是和">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-26T13:03:43.000Z">
-<meta property="article:modified_time" content="2020-10-26T13:12:20.604Z">
+<meta property="article:modified_time" content="2020-10-27T12:44:20.826Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -109,7 +109,8 @@
 }</code></pre><p>  } else {<br>    updateComponent = () =&gt; {<br>      vm._update(vm._render(), hydrating)<br>    }<br>  }</p>
 <p>  // we set this to vm._watcher inside the watcher’s constructor<br>  // since the watcher’s initial patch may call $forceUpdate (e.g. inside child<br>  // component’s mounted hook), which relies on vm._watcher being already defined<br>  new Watcher(vm, updateComponent, noop, {<br>    before () {<br>      if (vm._isMounted) {<br>        callHook(vm, ‘beforeUpdate’)<br>      }<br>    }<br>  }, true /* isRenderWatcher */)<br>  hydrating = false</p>
 <p>  // manually mounted instance, call mounted on self<br>  // mounted is called for render-created child components in its inserted hook<br>  if (vm.$vnode == null) {<br>    vm._isMounted = true<br>    callHook(vm, ‘mounted’)<br>  }<br>  return vm<br>}</p>
-<pre><code>从上面的代码可以看到，```mountComponent ```核心就是先实例化一个渲染```Watcher```，在它的回调函数中会调用 ```updateComponent``` 方法，在此方法中调用 ```vm._render``` 方法先生成虚拟 Node，最终调用 ```vm._update``` 更新 DOM。
+<pre><code>
+从上面的代码可以看到，```mountComponent ```核心就是先实例化一个渲染```Watcher```，在它的回调函数中会调用 ```updateComponent``` 方法，在此方法中调用 ```vm._render``` 方法先生成虚拟 Node，最终调用 ```vm._update``` 更新 DOM。
 
 ```Watcher``` 在这里起到两个作用，一个是初始化的时候会执行回调函数，另一个是当 vm 实例中的监测的数据发生变化的时候执行回调函数，这块儿我们会在之后的章节中介绍。
 
@@ -132,6 +133,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/10/27/vue-print5/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          vue-print5
+        
+      </div>
+    </a>
   
   
     <a href="/2020/10/22/vue-prin3/" id="article-nav-older" class="article-nav-link-wrap">
@@ -173,6 +183,10 @@
       <ul>
         
           <li>
+            <a href="/2020/10/27/vue-print5/">vue-print5</a>
+          </li>
+        
+          <li>
             <a href="/2020/10/26/vue-prin4/">vue-prin4</a>
           </li>
         
@@ -186,10 +200,6 @@
         
           <li>
             <a href="/2020/10/19/vue-prin1/">vue-prin1</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/24/vue-924/">vue-924</a>
           </li>
         
       </ul>
